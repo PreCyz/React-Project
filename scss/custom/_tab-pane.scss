@@ -1,0 +1,5 @@
+.tab-pane {
+  @extend .border;
+  @extend .border-top-0;
+  @extend .p-3;
+}

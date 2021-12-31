@@ -1,0 +1,31 @@
+.thumbnail-selector {
+  @extend .list-unstyled;
+  @extend .mb-0;
+
+  li {
+    @extend .bg-light;
+    @extend .rounded;
+    @extend .border;
+
+    &:not(:last-child) {
+      @extend .mb-1;
+    }
+
+    .row {
+      @extend .g-0;
+    }
+
+    .btn {
+      @extend .btn-sm;
+      @extend .btn-light;
+    }
+
+    &.active {
+      @extend .bg-primary;
+
+      .btn {
+        @extend .btn-primary;
+      }
+    }
+  }
+}

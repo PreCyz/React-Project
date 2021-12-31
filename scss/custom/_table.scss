@@ -1,0 +1,8 @@
+.table {
+  thead {
+    .btn {
+      @extend .btn-light;
+      @extend .text-nowrap;
+    }
+  }
+}

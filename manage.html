@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>iCarly | Manage</title>
+
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+<div class="container my-3 my-md-4">
+    <div class="mb-2">
+        <a href="javascript:">
+            &LeftArrow; Go back
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 col-lg-3 mb-3">
+            <img class="img-fluid img-thumbnail" src="https://dummyimage.com/600x400/fff/000">
+        </div>
+
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="mb-2">
+                <input id="upload-photo" class="form-control form-control-sm" type="file">
+            </div>
+
+            <ul class="thumbnail-selector">
+                <li class="active">
+                    <div class="row">
+                        <div class="col-auto">
+                            <button class="btn">&Cross;</button>
+                        </div>
+
+                        <div class="col">
+                            <button class="btn text-start w-100">
+                                Photo1.jpg
+                            </button>
+                        </div>
+                    </div>
+                </li>
+                <li class="">
+                    <div class="row">
+                        <div class="col-auto">
+                            <button class="btn">&Cross;</button>
+                        </div>
+
+                        <div class="col">
+                            <button class="btn text-start w-100">
+                                Photo2.jpg
+                            </button>
+                        </div>
+                    </div>
+                </li>
+                <li class="">
+                    <div class="row">
+                        <div class="col-auto">
+                            <button class="btn">&Cross;</button>
+                        </div>
+
+                        <div class="col">
+                            <button class="btn text-start w-100">
+                                Photo3.jpg
+                            </button>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="col-lg-6">
+            <form>
+                <div class="form-floating mb-3">
+                    <input id="input-name" class="form-control" type="text" placeholder="&nbsp;">
+                    <label for="input-name">Name</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input id="input-model" class="form-control" type="text" placeholder="&nbsp;">
+                    <label for="input-model">Model</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input id="input-location" class="form-control" type="text" placeholder="&nbsp;">
+                    <label for="input-location">Location</label>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <button class="btn btn-outline-danger">Delete</button>
+                    <button class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-md-6 col-lg-4 mb-2">
+            <div class="input-group">
+                <span class="input-group-text">🔍</span>
+                <input class="form-control" type="text" placeholder="Search">
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th><button class="btn">ID &DownArrow;</button></th>
+                <th><button class="btn">First name &DownArrowUpArrow;</button></th>
+                <th><button class="btn">Last name &DownArrowUpArrow;</button></th>
+                <th><button class="btn">Booking date &DownArrowUpArrow;</button></th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>315</td>
+                <td>Alice</td>
+                <td>Alice</td>
+                <td>15-11-2022</td>
+                <td>
+                    <a href="javascript:">Cancel</a>
+                </td>
+            </tr>
+            <tr>
+                <td>314</td>
+                <td>Bob</td>
+                <td>Bob</td>
+                <td>13-02-2022</td>
+                <td>
+                    <a href="javascript:">Cancel</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <nav>
+        <ul class="pagination justify-content-end">
+            <li class="page-item">
+                <a class="page-link" href="javascript:">
+                    <span>&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item"><a class="page-link" href="javascript:">1</a></li>
+            <li class="page-item active"><a class="page-link" href="javascript:">2</a></li>
+            <li class="page-item"><a class="page-link" href="javascript:">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="javascript:">
+                    <span>&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<script src="js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

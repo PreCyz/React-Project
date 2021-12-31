@@ -1,0 +1,22 @@
+{
+  "name": "react-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "build": "sass scss:css --style=compressed --no-source-map --quiet",
+    "prefix": "npm run build && postcss css/style.css --replace --map --use=autoprefixer",
+    "start": "onchange \"scss/**/*.scss\" -- npm run prefix"
+  },
+  "dependencies": {
+    "autoprefixer": "^10.4.0",
+    "onchange": "^7.1.0",
+    "postcss": "^8.4.5",
+    "postcss-cli": "^9.1.0",
+    "sass": "^1.45.0"
+  },
+  "browserslist": [
+    "defaults"
+  ]
+}

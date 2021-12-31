@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>iCarly | Dashboard</title>
+
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+<div class="container my-3 my-md-4">
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#assets-page">
+                Assets
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#bookings-page">
+                Bookings
+            </button>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div id="assets-page" class="tab-pane show active">
+
+            <div class="row">
+                <div class="col-md-6 col-lg-4 mb-2">
+                    <div class="input-group">
+                        <span class="input-group-text">🔍</span>
+                        <input class="form-control" type="text" placeholder="Search">
+                    </div>
+                </div>
+
+                <div class="col text-end mb-2">
+                    <button class="btn btn-primary">Add</button>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th><button class="btn btn-light">Name &DownArrow;</button></th>
+                        <th><button class="btn btn-light">Model &DownArrowUpArrow;</button></th>
+                        <th>Location</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>ABC</td>
+                        <td>Model1</td>
+                        <td>Warsaw</td>
+                        <td>
+                            <a href="javascript:">Manage</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>DEF</td>
+                        <td>Model2</td>
+                        <td>Kraków</td>
+                        <td>
+                            <a href="javascript:">Manage</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <nav>
+                <ul class="pagination justify-content-end">
+                    <li class="page-item">
+                        <a class="page-link" href="javascript:">
+                            <span>&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="javascript:">1</a></li>
+                    <li class="page-item active"><a class="page-link" href="javascript:">2</a></li>
+                    <li class="page-item"><a class="page-link" href="javascript:">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="javascript:">
+                            <span>&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+        </div>
+
+        <div id="bookings-page" class="tab-pane">
+
+            <div class="row">
+                <div class="col-md-6 col-lg-4 mb-2">
+                    <div class="input-group">
+                        <span class="input-group-text">🔍</span>
+                        <input class="form-control" type="text" placeholder="Search">
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th><button class="btn">ID &DownArrow;</button></th>
+                        <th><button class="btn">First name &DownArrowUpArrow;</button></th>
+                        <th><button class="btn">Last name &DownArrowUpArrow;</button></th>
+                        <th><button class="btn">Booking date &DownArrowUpArrow;</button></th>
+                        <th><button class="btn">Name &DownArrowUpArrow;</button></th>
+                        <th><button class="btn">Model &DownArrowUpArrow;</button></th>
+                        <th>Location</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>315</td>
+                        <td>Alice</td>
+                        <td>Alice</td>
+                        <td>15-11-2022</td>
+                        <td>ABC</td>
+                        <td>Model1</td>
+                        <td>Warsaw</td>
+                        <td>
+                            <a href="javascript:">Manage</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>314</td>
+                        <td>Bob</td>
+                        <td>Bob</td>
+                        <td>13-02-2022</td>
+                        <td>ABC</td>
+                        <td>Model1</td>
+                        <td>Warsaw</td>
+                        <td>
+                            <a href="javascript:">Manage</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <nav>
+                <ul class="pagination justify-content-end">
+                    <li class="page-item">
+                        <a class="page-link" href="javascript:">
+                            <span>&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="javascript:">1</a></li>
+                    <li class="page-item active"><a class="page-link" href="javascript:">2</a></li>
+                    <li class="page-item"><a class="page-link" href="javascript:">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="javascript:">
+                            <span>&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+        </div>
+    </div>
+</div>
+
+<script src="js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
