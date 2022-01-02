@@ -10,6 +10,7 @@ import react.pw.carly.models.FullOrder;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 
 public interface CarOrderRepository extends JpaRepository<CarOrder, Long> {
@@ -17,7 +18,7 @@ public interface CarOrderRepository extends JpaRepository<CarOrder, Long> {
     List<CarOrder> findAllByStartDateLessThanEqualAndEndDateGreaterThanEqualAndCarIs(LocalDate endDate, LocalDate startDate, Car car);
 
     @Query(value = "SELECT new react.pw.carly.models.FullOrder(o.orderId,o.booklyId,  o.firstName,o.lastName,o.status,o.startDate,o.endDate, " +
-            "c.carId,c.carName,c.carModel,c.price,c.location,c.description,c.pic1,c.pic2,c.pic3) " +
+            "c.carId,c.carName,c.carModel,c.price,c.location,c.description,c.images) " +
             "FROM CarOrder as o,  Car as c  WHERE " +
             "o.car.carId = c.carId and" +
             "(:keyword is null or o.firstName like %:keyword% ) or " +
@@ -25,4 +26,13 @@ public interface CarOrderRepository extends JpaRepository<CarOrder, Long> {
             "(:keyword is null or c.carName like %:keyword%) "
     )
     List<FullOrder> findAllByInputString( String keyword, Pageable pageable);
+
+
+    @Query(value = "SELECT new react.pw.carly.models.FullOrder(o.orderId,o.booklyId,  o.firstName,o.lastName,o.status,o.startDate,o.endDate, " +
+            "c.carId,c.carName,c.carModel,c.price,c.location,c.description,c.images) " +
+            "FROM CarOrder as o,  Car as c  WHERE " +
+            "o.car.carId = c.carId and " +
+            "o.orderId = :orderId"
+    )
+    Optional<FullOrder> findByInputString(Long orderId);
 }
