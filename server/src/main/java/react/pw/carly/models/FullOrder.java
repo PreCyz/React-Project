@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 import react.pw.carly.utils.JsonDateDeserializer;
 import react.pw.carly.utils.JsonDateSerializer;
 
@@ -18,7 +19,23 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FullOrder {
-
+    public static FullOrder EMPTY = new FullOrder();
+    public FullOrder(long orderId, String booklyId, String firstName, String lastName, String status, LocalDate startDate, LocalDate endDate, long carId, String carName, String carModel, BigDecimal price, String location, String description, Object images) {
+        this.orderId = orderId;
+        this.booklyId = booklyId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.status = status;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.carId = carId;
+        this.carName = carName;
+        this.carModel = carModel;
+        this.price = price;
+        this.location = location;
+        this.description = description;
+        this.images = (String[])images;
+    }
 
     private long orderId;
 
@@ -60,12 +77,5 @@ public class FullOrder {
 
     private String description;
 
-
-    private String pic1;
-
-
-    private String pic2;
-
-
-    private String pic3;
+    private String[] images;
 }

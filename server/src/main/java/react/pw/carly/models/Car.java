@@ -3,7 +3,10 @@ package react.pw.carly.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import lombok.Data;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 import react.pw.carly.utils.JsonDateDeserializer;
 import react.pw.carly.utils.JsonDateSerializer;
 
@@ -19,6 +22,7 @@ import java.util.List;
 @Table(name = "car")
 @Data
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@TypeDef(name = "json", typeClass = JsonStringType.class)
 public class Car implements Serializable {
 
     private static final long serialVersionUID = -6783504532088859179L;
@@ -44,14 +48,18 @@ public class Car implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "pic1")
-    private String pic1;
+//    @Column(name = "pic1")
+//    private String pic1;
+//
+//    @Column(name = "pic2")
+//    private String pic2;
+//
+//    @Column(name = "pic3")
+//    private String pic3;
 
-    @Column(name = "pic2")
-    private String pic2;
-
-    @Column(name = "pic3")
-    private String pic3;
+    @Type( type = "json" )
+    @Column(columnDefinition = "json" ,name = "images")
+    private String[] images;
 
     @Column(name = "deleteFlag")
     private boolean deleteFlag;

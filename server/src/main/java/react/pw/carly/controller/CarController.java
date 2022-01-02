@@ -26,6 +26,8 @@ import react.pw.carly.services.CarService;
 import react.pw.carly.web.UploadFileResponse;
 
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static java.util.stream.Collectors.joining;
@@ -122,12 +124,15 @@ public class CarController {
 
     }
 //
+private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     @GetMapping(path = "")
     public ResponseEntity<Collection<Car>> getAllCompanies(@RequestHeader HttpHeaders headers,
                                                                @RequestParam(required=false,defaultValue = "0" ) Integer pageNum,
                                                                @RequestParam(required=false,defaultValue = "10" ) Integer maxNum,
                                                                 @RequestParam(required=false) String model,
                                                                            @RequestParam(required=false) String startDate,
+                                                                            @RequestParam(required=false) String endDate,
+                                                                            @RequestParam(required=false) String description,
                                                                            @RequestParam(required=false) String location,
                                                                            @RequestParam(required=false) String carName,
                                                                            @RequestParam(required=false) String keyword) {
@@ -139,7 +144,10 @@ public class CarController {
                             keyword,keyword,keyword,keyword,pageable);
             return ResponseEntity.ok(result);
         }else{
-            return ResponseEntity.ok(new ArrayList<Car>());
+            LocalDate startDateD = StringUtils.isEmpty(startDate)? null: LocalDate.parse(startDate, formatter);
+            LocalDate endDateD = StringUtils.isEmpty(endDate)? null: LocalDate.parse(endDate, formatter);
+            List<Car> result = repository.findAllByInputString(carName, location,description,model,startDateD,endDateD,pageable);
+            return ResponseEntity.ok(result);
         }
     }
 //

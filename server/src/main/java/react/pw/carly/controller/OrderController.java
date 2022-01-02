@@ -1,5 +1,6 @@
 package react.pw.carly.controller;
 
+import com.fasterxml.jackson.databind.introspect.TypeResolutionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import react.pw.carly.services.CarImageService;
 import react.pw.carly.services.CarOrderService;
 import react.pw.carly.services.CarService;
 
+import javax.websocket.server.PathParam;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -74,6 +76,17 @@ public class OrderController {
         List<FullOrder> result = orderRepository.findAllByInputString(keyword,pageable);
         return ResponseEntity.ok(result);
 
+    }
+
+    @GetMapping(path = "/{orderId}")
+    public ResponseEntity<FullOrder> getOrder(@RequestHeader HttpHeaders headers,@PathVariable Long orderId) {
+        logHeaders(headers);
+
+        Optional<FullOrder> result = orderRepository.findByInputString(orderId);
+        if (!result.isEmpty()){
+            return ResponseEntity.ok(result.get());
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(FullOrder.EMPTY);
     }
 //
 //    @GetMapping(path = "")
