@@ -10,12 +10,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class JsonDateSerializer extends JsonSerializer {
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
     @Override
     public void serialize(Object o, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
-        final LocalDate date = (LocalDate) o;
+        final LocalDateTime date = (LocalDateTime) o;
         final String dateString = date.format(this.formatter);
         jsonGenerator.writeString(dateString);
     }
+
 }

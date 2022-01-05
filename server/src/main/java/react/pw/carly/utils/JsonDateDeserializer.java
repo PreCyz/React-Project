@@ -12,15 +12,15 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class JsonDateDeserializer extends JsonDeserializer<LocalDate> {
+public class JsonDateDeserializer extends JsonDeserializer<LocalDateTime> {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     @Override
-    public LocalDate deserialize(JsonParser jp, DeserializationContext ctxt)
+    public LocalDateTime deserialize(JsonParser jp, DeserializationContext ctxt)
             throws IOException, JsonProcessingException {
         ObjectCodec oc = jp.getCodec();
         TextNode node = oc.readTree(jp);
         String dateString = node.textValue();
-//        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE;
-        return LocalDate.parse(dateString, formatter);
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+        return LocalDateTime.parse(dateString, formatter);
     }
 }

@@ -25,7 +25,7 @@ import java.util.Optional;
 import static java.util.stream.Collectors.joining;
 
 @RestController
-@RequestMapping(path = "V1/image")
+@RequestMapping(path = "V1/images")
 public class ImageController {
 
     private final Logger logger = LoggerFactory.getLogger(ImageController.class);

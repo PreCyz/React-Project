@@ -46,12 +46,12 @@ public class CarOrder implements Serializable {
     @Column(name = "startDate")
     @JsonDeserialize(using = JsonDateDeserializer.class)
     @JsonSerialize(using = JsonDateSerializer.class)
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
     @Column(name = "endDate")
     @JsonDeserialize(using = JsonDateDeserializer.class)
     @JsonSerialize(using = JsonDateSerializer.class)
-    private LocalDate endDate;
+    private LocalDateTime endDate;
 
     @Column(name = "createTime")
     private Date createTime;

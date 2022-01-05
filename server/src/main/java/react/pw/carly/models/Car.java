@@ -33,7 +33,7 @@ public class Car implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long carId;
 
-    @Column(name = "carName")
+    @Column(name = "name")
     private String carName;
 
     @Column(name = "carModel")
@@ -61,8 +61,18 @@ public class Car implements Serializable {
     @Column(columnDefinition = "json" ,name = "images")
     private String[] images;
 
-    @Column(name = "deleteFlag")
-    private boolean deleteFlag;
+    @Column(name = "isActive")
+    private boolean isActive;
+
+    @Column(name = "startDate")
+    @JsonDeserialize(using = JsonDateDeserializer.class)
+    @JsonSerialize(using = JsonDateSerializer.class)
+    private LocalDateTime startDateTime;
+
+    @Column(name = "endDate")
+    @JsonDeserialize(using = JsonDateDeserializer.class)
+    @JsonSerialize(using = JsonDateSerializer.class)
+    private LocalDateTime endDateTime;
 
     @Column(name = "createTime")
     private Date createTime;
