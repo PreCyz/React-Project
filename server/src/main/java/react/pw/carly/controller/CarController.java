@@ -27,13 +27,14 @@ import react.pw.carly.web.UploadFileResponse;
 
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static java.util.stream.Collectors.joining;
 
 @RestController
-@RequestMapping(path = "V1/car")
+@RequestMapping(path = "V1/cars")
 public class CarController {
 
     private final Logger logger = LoggerFactory.getLogger(CarController.class);
@@ -82,7 +83,7 @@ public class CarController {
     }
 
 
-    @PostMapping(path = "/{carId}/order")
+    @PostMapping(path = "/{carId}/orders")
     public ResponseEntity<CarOrder> createOrder(@RequestHeader HttpHeaders headers, @PathVariable Long carId, @RequestBody CarOrder carOrder) {
         logHeaders(headers);
         Optional<Car> car = repository.findById(carId);
@@ -101,7 +102,7 @@ public class CarController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(CarOrder.EMPTY);
     }
 
-    @PatchMapping(path = "/{carId}/order")
+    @PatchMapping(path = "/{carId}/orders")
     public ResponseEntity<CarOrder> updateOrder(@RequestHeader HttpHeaders headers, @PathVariable Long carId, @RequestBody CarOrder carOrder) {
         logHeaders(headers);
 
@@ -124,7 +125,8 @@ public class CarController {
 
     }
 //
-private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+
     @GetMapping(path = "")
     public ResponseEntity<Collection<Car>> getAllCompanies(@RequestHeader HttpHeaders headers,
                                                                @RequestParam(required=false,defaultValue = "0" ) Integer pageNum,
@@ -135,18 +137,20 @@ private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM
                                                                             @RequestParam(required=false) String description,
                                                                            @RequestParam(required=false) String location,
                                                                            @RequestParam(required=false) String carName,
+                                                                            @RequestParam(required=false,defaultValue = "true") Boolean isActive,
                                                                            @RequestParam(required=false) String keyword) {
         logHeaders(headers);
         Pageable pageable = PageRequest.of(pageNum*maxNum, maxNum);
         if (!StringUtils.isEmpty(keyword)){
             List<Car> result = repository.
-                    findAllByCarNameContainsOrLocationContainsOrDescriptionContainsOrCarModelContains(
-                            keyword,keyword,keyword,keyword,pageable);
+                    findAllByKeyWords(
+                            keyword,isActive,pageable);
             return ResponseEntity.ok(result);
         }else{
-            LocalDate startDateD = StringUtils.isEmpty(startDate)? null: LocalDate.parse(startDate, formatter);
-            LocalDate endDateD = StringUtils.isEmpty(endDate)? null: LocalDate.parse(endDate, formatter);
-            List<Car> result = repository.findAllByInputString(carName, location,description,model,startDateD,endDateD,pageable);
+            DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+            LocalDateTime startDateD = StringUtils.isEmpty(startDate)? null: LocalDateTime.parse(startDate, formatter);
+            LocalDateTime endDateD = StringUtils.isEmpty(endDate)? null: LocalDateTime.parse(endDate, formatter);
+            List<Car> result = repository.findAllByInputString(carName, location,description,model,startDateD,endDateD,isActive,pageable);
             return ResponseEntity.ok(result);
         }
     }

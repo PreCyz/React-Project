@@ -1,28 +1,20 @@
 package react.pw.carly.controller;
 
-import com.fasterxml.jackson.databind.introspect.TypeResolutionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import react.pw.carly.dao.CarOrderRepository;
 import react.pw.carly.dao.CarRepository;
-import react.pw.carly.models.Car;
-import react.pw.carly.models.CarOrder;
-import react.pw.carly.models.FullOrder;
-import react.pw.carly.services.CarImageService;
+import react.pw.carly.vo.FullOrder;
 import react.pw.carly.services.CarOrderService;
 import react.pw.carly.services.CarService;
 
-import javax.websocket.server.PathParam;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +22,7 @@ import java.util.Optional;
 import static java.util.stream.Collectors.joining;
 
 @RestController
-@RequestMapping(path = "V1/order")
+@RequestMapping(path = "V1/orders")
 public class OrderController {
 
     private final Logger logger = LoggerFactory.getLogger(OrderController.class);
