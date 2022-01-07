@@ -1,9 +1,14 @@
 import axios from 'axios'
+import { getToken } from '../utils/jwt'
 import { API_NAME, API_ENDPOINTS } from './constants'
 
 export const getBookings = async () => {
   try {
-    return axios.get(`${API_NAME}/${API_ENDPOINTS.booking}`)
+    return axios.get(`${API_NAME}/${API_ENDPOINTS.booking}`, {
+      headers: {
+        Authorization: 'Bearer ' + getToken(),
+      },
+    })
   } catch (err) {
     throw err
   }
@@ -34,16 +39,22 @@ export const postBooking = async (data) => {
   }
 }
 
-export const postBooking = async (data) => {
+export const cancelBooking = async (data) => {
   const body = {
     status: data.status,
-    orderId: data.orederId,
+    orderId: data.orderId,
     booklyId: data.booklyId,
   }
   try {
     return axios.patch(
-      `${API_NAME}/${API_ENDPOINTS.booking}`,
-      JSON.stringify(body)
+      `${API_NAME}/${API_ENDPOINTS.car}/${data.carId}/${API_ENDPOINTS.booking}`,
+      JSON.stringify(body),
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + getToken(),
+        },
+      }
     )
   } catch (err) {
     throw err

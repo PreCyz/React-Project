@@ -1,9 +1,15 @@
 import axios from 'axios'
 import { API_NAME, API_ENDPOINTS } from './constants'
+import { getToken } from '../utils/jwt'
 
-export const getCars = async () => {
+export const getCars = async (pageNum, maxNum) => {
   try {
-    return axios.get(`${API_NAME}/${API_ENDPOINTS.car}`)
+    return axios.get(
+      `${API_NAME}/${API_ENDPOINTS.car}?pageNum=${pageNum}&maxNum=${maxNum}`,
+      {
+        headers: { Authorization: 'Bearer ' + getToken() },
+      }
+    )
   } catch (err) {
     throw err
   }
@@ -16,16 +22,17 @@ export const getCarById = async (id) => {
   }
 }
 export const addCar = async (data) => {
-  const body = {
-    carId: null,
-    carName: data.name,
-    carModel: data.model,
-    description: data.description,
-    price: data.price,
-    location: data.location,
-  }
   try {
-    return axios.put(`${API_NAME}/${API_ENDPOINTS.car}`, JSON.stringify(body))
+    return axios.put(
+      `${API_NAME}/${API_ENDPOINTS.car}`,
+      JSON.stringify({ id: null, ...data }),
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + getToken(),
+        },
+      }
+    )
   } catch (err) {
     throw err
   }

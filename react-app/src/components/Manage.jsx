@@ -1,39 +1,117 @@
 import React, { useState, useEffect } from 'react'
 import { updateCar, addCar } from '../api/car'
+import { addImage, getImage } from '../api/image'
+import moment from 'moment'
+import { cancelBooking } from '../api/booking'
 export default function Manage({
   bookingsArray,
   manageData,
-  assetImages = [{ src: 'szczur.png' }],
   setManageViewOpen,
 }) {
   const [nameInput, setNameInput] = useState(manageData.name)
   const [modelInput, setModelInput] = useState(manageData.model)
   const [locationInput, setLocationInput] = useState(manageData.location)
-  const [activeImageSrc, setActiveImageSrc] = useState(assetImages[0].src)
   const [editMode, setEditMode] = useState(false)
+  const [imagesArray, setImagesArray] = useState([])
+  const [currentImage, setCurrentImage] = useState()
+  const [imagesIdArray, setImagesIdArray] = useState(manageData.images | [])
+  const [startDateInput, setStartDateInput] = useState(
+    moment(manageData.startDate).format('DD-MM-YYYY') |
+      moment(new Date()).format('DD-MM-YYYY')
+  )
+  const [endDateInput, setEndDateInput] = useState(
+    moment(manageData.endDate).format('DD-YY-MMMM') |
+      moment(new Date()).format('DD-MM-YYYY')
+  )
+  const [activeInput, setActiveInput] = useState(manageData.active | false)
+  const [descInput, setDescInput] = useState(manageData.description | '')
+  const [priceInput, setPriceInput] = useState(manageData.price | '')
+  const [filteredOrders, setFilteredOrders] = useState([])
 
+  const handleSearch = (e) => {
+    if (e.target.value === '') {
+      setFilteredOrders(manageData.orders)
+    } else {
+      setFilteredOrders(
+        manageData.orders.filter(
+          (order) =>
+            order.lastName
+              .toUpperCase()
+              .includes(e.target.value.toUpperCase()) ||
+            order.firstName.toUpperCase().includes(e.target.value.toUpperCase())
+        )
+      )
+    }
+  }
   useEffect(() => {
-    if (manageData?.name) {
+    setFilteredOrders(manageData.orders)
+    manageData?.description && setDescInput(manageData.description)
+    if (manageData?.carName) {
       setEditMode(true)
     } else {
       setEditMode(false)
     }
+    manageData.images.forEach(async (image, index) => {
+      'use strict'
+      const response = await getImage(image)
+      fetch('data:image/png;base64,' + response)
+        .then((res) => {
+          return res.blob()
+        })
+        .then((blob) =>
+          setImagesArray([
+            ...imagesArray,
+            new File([blob], `image-${index}.png`, { type: 'image/png' }),
+          ])
+        )
+      console.log(imagesArray)
+    })
   }, [])
+  useEffect(() => {
+    console.log(descInput)
+  }, [descInput])
+  const handleUpload = async () => {
+    try {
+      const response = await addImage(imagesArray)
+      setImagesIdArray(response.data.map((item) => item.fileId))
+    } catch (err) {
+      console.log(err)
+    }
+  }
+  const handleCancel = async (order) => {
+    let data = {
+      carId: manageData.carId,
+      status: 2,
+      orderId: order.orderId,
+      booklyId: order.booklyId,
+    }
+    cancelBooking(data)
+  }
+  useEffect(() => {
+    console.log(imagesIdArray)
+  }, [imagesIdArray])
 
   const handleDelete = () => {
     // TODO Delete Api Call
   }
-  const submitForm = async () => {
+  const submitForm = async (e) => {
+    e.preventDefault()
     let data
     if (editMode) {
       //TODO Add image posting
       data = {
-        carId: manageData.id,
         carName: nameInput,
         carModel: modelInput,
-        description: 'todo',
-        price: 420,
+        description: descInput,
+        price: Number(priceInput),
         location: locationInput,
+        images: imagesIdArray,
+        startDateTime: moment(startDateInput),
+        endDateTime: moment(endDateInput),
+        active: activeInput,
+        createTime: null,
+        updateTime: null,
+        orders: manageData.orders,
       }
       try {
         await updateCar(data)
@@ -42,76 +120,102 @@ export default function Manage({
       }
     } else {
       data = {
+        id: manageData.id,
         carName: nameInput,
         carModel: modelInput,
-        description: 'todo',
-        price: 420,
+        description: descInput,
+        price: Number(priceInput),
         location: locationInput,
+        images: imagesIdArray,
+        startDateTime: moment(startDateInput),
+        endDateTime: moment(endDateInput),
+        active: activeInput,
+        createTime: null,
+        updateTime: null,
+        orders: [],
       }
+      console.log(data)
       try {
         await addCar(data)
       } catch (error) {
         console.log(error)
       }
     }
-    setManageViewOpen(false)
   }
   return (
     <>
-      <div class="container my-3 my-md-4">
-        <div class="mb-2">
+      <div className="container my-3 my-md-4">
+        <div className="mb-2">
           <button className="btn" onClick={() => setManageViewOpen(false)}>
             &#8592; Go back
           </button>
         </div>
 
-        <div class="row">
-          <div class="col-md-6 col-lg-3 mb-3">
+        <div className="row">
+          <div className="col-md-6 col-lg-3 mb-3">
             <img
-              class="img-fluid img-thumbnail"
+              className="img-fluid img-thumbnail"
               src={
-                activeImageSrc
-                  ? activeImageSrc
+                currentImage
+                  ? currentImage
                   : 'https://dummyimage.com/600x400/fff/000'
               }
             />
           </div>
 
-          <div class="col-md-6 col-lg-3 mb-4">
-            <div class="mb-2">
+          <div className="col-md-6 col-lg-3 mb-4">
+            <div className="mb-2">
               <input
                 id="upload-photo"
-                class="form-control form-control-sm"
+                className="form-control form-control-sm"
                 type="file"
+                onChange={(e) =>
+                  setImagesArray([...imagesArray, e.target.files[0]])
+                }
               />
             </div>
 
-            <ul class="thumbnail-selector">
-              {assetImages &&
-                assetImages.map((image) => (
-                  <li class="active">
-                    <div class="row">
-                      <div class="col-auto">
-                        <button class="btn">x</button>
+            <ul className="thumbnail-selector">
+              {imagesArray &&
+                imagesArray.map((image) => (
+                  <li
+                    className="active"
+                    onClick={() => setCurrentImage(URL.createObjectURL(image))}
+                  >
+                    <div className="row">
+                      <div className="col-auto">
+                        <button
+                          className="btn"
+                          onClick={() =>
+                            setImagesArray(
+                              imagesArray.filter((i) => image.name !== i.name)
+                            )
+                          }
+                        >
+                          x
+                        </button>
                       </div>
 
-                      <div class="col">
-                        <button class="btn text-start w-100">
-                          {image.src}
+                      <div className="col">
+                        <button className="btn text-start w-100">
+                          {image.name}
                         </button>
                       </div>
                     </div>
                   </li>
                 ))}
             </ul>
+            <button className="btn btn-primary" onClick={() => handleUpload()}>
+              Upload
+            </button>
           </div>
 
-          <div class="col-lg-6">
+          <div className="col-lg-6">
             <form>
-              <div class="form-floating mb-3">
+              <div className="form-floating mb-3">
                 <input
                   id="input-name"
-                  class="form-control"
+                  className="form-control"
                   type="text"
                   placeholder="&nbsp;"
                   value={nameInput}
@@ -119,13 +223,13 @@ export default function Manage({
                     setNameInput(e.target.value)
                   }}
                 />
-                <label for="input-name">Name</label>
+                <label htmlFor="input-name">Name</label>
               </div>
 
-              <div class="form-floating mb-3">
+              <div className="form-floating mb-3">
                 <input
                   id="input-model"
-                  class="form-control"
+                  className="form-control"
                   type="text"
                   placeholder="&nbsp;"
                   value={modelInput}
@@ -133,13 +237,13 @@ export default function Manage({
                     setModelInput(e.target.value)
                   }}
                 />
-                <label for="input-model">Model</label>
+                <label htmlFor="input-model">Model</label>
               </div>
 
-              <div class="form-floating mb-3">
+              <div className="form-floating mb-3">
                 <input
                   id="input-location"
-                  class="form-control"
+                  className="form-control"
                   type="text"
                   placeholder="&nbsp;"
                   value={locationInput}
@@ -149,15 +253,87 @@ export default function Manage({
                 />
                 <label for="input-location">Location</label>
               </div>
+              <div className="form-floating mb-3">
+                <input
+                  id="input-location"
+                  className="form-control"
+                  type="text"
+                  placeholder="&nbsp;"
+                  value={descInput}
+                  onChange={(e) => {
+                    setDescInput(e.target.value)
+                  }}
+                />
+                <label htmlFor="input-location">Description</label>
+              </div>
+              <div className="form-floating mb-3">
+                <input
+                  id="input-location"
+                  className="form-control"
+                  type="text"
+                  placeholder="&nbsp;"
+                  value={priceInput}
+                  onChange={(e) => {
+                    setPriceInput(e.target.value)
+                  }}
+                />
+                <label for="input-location">Price</label>
+              </div>
+              <div className="form-floating mb-3">
+                <input
+                  id="input-location"
+                  className="form-control"
+                  type="date"
+                  placeholder="&nbsp;"
+                  value={startDateInput}
+                  onChange={(e) => {
+                    setStartDateInput(e.target.value)
+                  }}
+                />
+                <label htmlFor="input-location">Start Date</label>
+              </div>
+              <div className="form-floating mb-3">
+                <input
+                  id="input-location"
+                  className="form-control"
+                  type="date"
+                  placeholder="&nbsp;"
+                  value={endDateInput}
+                  onChange={(e) => {
+                    setEndDateInput(e.target.value)
+                  }}
+                />
+                <label htmlFor="input-location">End Date</label>
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: '20px',
+                }}
+              >
+                <input
+                  style={{ marginRight: '15px' }}
+                  type="checkbox"
+                  value={activeInput}
+                  onChange={(e) => {
+                    setActiveInput(e.target.checked)
+                  }}
+                />
+                <label for="input-location">Active</label>
+              </div>
 
-              <div class="d-flex justify-content-between">
+              <div className="d-flex justify-content-between">
                 <button
-                  class="btn btn-outline-danger"
+                  className="btn btn-outline-danger"
                   onClick={() => handleDelete()}
                 >
                   Delete
                 </button>
-                <button class="btn btn-primary" onClick={() => submitForm()}>
+                <button
+                  className="btn btn-primary"
+                  onClick={(e) => submitForm(e)}
+                >
                   Save
                 </button>
               </div>
@@ -165,86 +341,89 @@ export default function Manage({
           </div>
         </div>
 
-        <div class="row">
-          <div class="col-md-6 col-lg-4 mb-2">
-            <div class="input-group">
-              <span class="input-group-text">🔍</span>
-              <input class="form-control" type="text" placeholder="Search" />
+        <div className="row">
+          <div className="col-md-6 col-lg-4 mb-2">
+            <div className="input-group">
+              <span className="input-group-text">🔍</span>
+              <input
+                onChange={(e) => handleSearch(e)}
+                className="form-control"
+                type="text"
+                placeholder="Search"
+              />
             </div>
           </div>
         </div>
 
-        <div class="table-responsive">
-          <table class="table table-striped">
+        <div className="table-responsive">
+          <table className="table table-striped">
             <thead>
               <tr>
                 <th>
-                  <button class="btn">ID &#8595;</button>
+                  <button className="btn">ID &#8595;</button>
                 </th>
                 <th>
-                  <button class="btn">First name &#8693;</button>
+                  <button className="btn">First name &#8693;</button>
                 </th>
                 <th>
-                  <button class="btn">Last name &#8693;</button>
+                  <button className="btn">Last name &#8693;</button>
                 </th>
                 <th>
-                  <button class="btn">Booking date &#8693;</button>
+                  <button className="btn">Booking date &#8693;</button>
                 </th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>315</td>
-                <td>Alice</td>
-                <td>Alice</td>
-                <td>15-11-2022</td>
-                <td>
-                  <a href="javascript:">Cancel</a>
-                </td>
-              </tr>
-              <tr>
-                <td>314</td>
-                <td>Bob</td>
-                <td>Bob</td>
-                <td>13-02-2022</td>
-                <td>
-                  <a href="javascript:">Cancel</a>
-                </td>
-              </tr>
+              {filteredOrders?.map((item) => (
+                <tr>
+                  <td>{item.orderId}</td>
+                  <td>{item.firstName}</td>
+                  <td>{item.lastName}</td>
+                  <td>{moment(item.startDate).format('DD-MM-YYYY')}</td>
+                  <td>
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => handleCancel(item)}
+                    >
+                      Cancel
+                    </button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
 
-        <nav>
-          <ul class="pagination justify-content-end">
-            <li class="page-item">
-              <a class="page-link" href="javascript:">
+        {/* <nav>
+          <ul className="pagination justify-content-end">
+            <li className="page-item">
+              <a className="page-link" href="javascript:">
                 <span>&laquo;</span>
               </a>
             </li>
-            <li class="page-item">
-              <a class="page-link" href="javascript:">
+            <li className="page-item">
+              <a className="page-link" href="javascript:">
                 1
               </a>
             </li>
-            <li class="page-item active">
-              <a class="page-link" href="javascript:">
+            <li className="page-item active">
+              <a className="page-link" href="javascript:">
                 2
               </a>
             </li>
-            <li class="page-item">
-              <a class="page-link" href="javascript:">
+            <li className="page-item">
+              <a className="page-link" href="javascript:">
                 3
               </a>
             </li>
-            <li class="page-item">
-              <a class="page-link" href="javascript:">
+            <li className="page-item">
+              <a className="page-link" href="javascript:">
                 <span>&raquo;</span>
               </a>
             </li>
           </ul>
-        </nav>
+        </nav> */}
       </div>
     </>
   )

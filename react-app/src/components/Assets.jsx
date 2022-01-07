@@ -1,33 +1,41 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { AssetListItem } from '.'
+import { getCars } from '../api/car'
 export default function Assets({ active, setManageViewOpen, setManageData }) {
   // TODO
   // Fetch assets from API
-  const assetsFromApi = ''
-  const placeholder = [
-    {
-      id: 1,
-      name: 'ABC',
-      model: 'Model1',
-      location: 'Warsaw',
-    },
-    {
-      id: 2,
-      name: 'cba',
-      model: 'Model2',
-      location: 'Krakow',
-    },
-  ]
-  const assets = assetsFromApi || placeholder
+
+  const [assets, setAssets] = useState([])
+
+  useEffect(() => {
+    const fetchCars = async () => {
+      try {
+        const response = await getCars(0, 10)
+        console.log(response)
+        setAssets(response.data)
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    fetchCars()
+  }, [])
+
   const assetsToRender = assets.map((asset, index) => (
     <AssetListItem
       key={index}
-      id={asset.id}
-      name={asset.name}
-      model={asset.model}
+      carId={asset.carId}
+      name={asset.carName}
+      model={asset.carModel}
       location={asset.location}
       setManageData={setManageData}
       setManageViewOpen={setManageViewOpen}
+      startDateTime={asset.starDateTime}
+      endDateTime={asset.endDateTime}
+      orders={asset.orders}
+      price={asset.price}
+      description={asset.description}
+      images={asset.images}
+      active={asset.active}
     />
   ))
   const handleAddNewAsset = () => {

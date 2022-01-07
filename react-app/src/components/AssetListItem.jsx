@@ -7,14 +7,30 @@ export default function AssetListItem({
   location,
   setManageViewOpen,
   setManageData,
+  startDateTime,
+  endDateTime,
+  orders,
+  price,
+  description,
+  images,
+  active,
+  carId,
 }) {
   const handleManage = () => {
-    console.log('xd')
+    console.log(description)
     setManageData({
       id,
       name,
       model,
       location,
+      startDateTime,
+      endDateTime,
+      orders,
+      price,
+      description,
+      images,
+      active,
+      carId,
     })
     setManageViewOpen(true)
   }

@@ -1,11 +1,14 @@
+import { useEffect } from 'react'
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
 import { Bookings, Assets, Manage } from '../components/'
 import { useState } from 'react'
+import { Navigate } from 'react-router-dom'
+import { getToken } from '../utils/jwt'
 function Dashboard() {
   const [currentTab, setCurrentTab] = useState('assets')
   const [manageViewOpen, setManageViewOpen] = useState(false)
   const [manageData, setManageData] = useState({})
-  return (
+  return getToken() ? (
     <>
       {manageViewOpen ? (
         <Manage setManageViewOpen={setManageViewOpen} manageData={manageData} />
@@ -51,6 +54,8 @@ function Dashboard() {
         </div>
       )}
     </>
+  ) : (
+    <Navigate to="/" />
   )
 }
 

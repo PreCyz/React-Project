@@ -1,0 +1,28 @@
+.FormWrapper {
+  width: 600px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+.Flex {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  input {
+    width: 100% !important;
+  }
+  button {
+    margin-top: 20px;
+    width: 25%;
+    align-self: center;
+  }
+  span {
+    dispay: block;
+    margin-top: 20px;
+    color: grey;
+    cursor: pointer;
+    font-size: 12px;
+    text-align: center;
+  }
+}
