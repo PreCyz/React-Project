@@ -31,7 +31,7 @@ public class Car implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long carId;
+    private Long carId;
 
     @Column(name = "name")
     private String carName;
@@ -75,7 +75,7 @@ public class Car implements Serializable {
     private LocalDateTime endDateTime;
 
     @Column(name = "createTime")
-    private Date createTime;
+        private Date createTime;
 
     @Column(name = "updateTime")
     private Date updateTime;
