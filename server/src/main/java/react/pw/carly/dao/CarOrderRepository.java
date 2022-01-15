@@ -15,15 +15,13 @@ import java.util.Optional;
 
 public interface CarOrderRepository extends JpaRepository<CarOrder, Long> {
 
-    List<CarOrder> findAllByStartDateLessThanEqualAndEndDateGreaterThanEqualAndCarIs(LocalDateTime endDate, LocalDateTime startDate, Car car);
+    List<CarOrder> findAllByStartDateLessThanEqualAndEndDateGreaterThanEqualAndCarIsAndStatusIn(LocalDateTime endDate, LocalDateTime startDate, Car car,String[] status);
 
     @Query(value = "SELECT new react.pw.carly.vo.FullOrder(o.orderId,o.booklyId,  o.firstName,o.lastName,o.status,o.startDate,o.endDate, " +
             "c.carId,c.carName,c.carModel,c.price,c.location,c.description,c.images) " +
             "FROM CarOrder as o,  Car as c  WHERE " +
             "o.car.carId = c.carId and" +
-            "(:keyword is null or o.firstName like %:keyword% ) or " +
-            "(:keyword is null or o.lastName like %:keyword%) or "+
-            "(:keyword is null or c.carName like %:keyword%) "
+            "(:keyword is null or o.firstName like %:keyword% or o.lastName like %:keyword% or c.carName like %:keyword%) "
     )
     List<FullOrder> findAllByInputString( String keyword, Pageable pageable);
 

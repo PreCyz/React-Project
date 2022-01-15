@@ -20,6 +20,9 @@ import react.pw.carly.services.CarService;
 import react.pw.carly.web.UploadFileResponse;
 
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.joining;
@@ -50,59 +53,22 @@ public class ImageController {
         );
     }
 
-
-
-//
-//    @GetMapping(path = "")
-//    public ResponseEntity<Collection<Company>> getAllCompanies(@RequestHeader HttpHeaders headers) {
-//        logHeaders(headers);
-//        if (securityService.isAuthorized(headers)) {
-//            return ResponseEntity.ok(repository.findAll());
-//        }
-//        throw new UnauthorizedException("Request is unauthorized");
-//    }
-//
-//    @PutMapping(path = "/{companyId}")
-//    public ResponseEntity<Company> updateCompany(@RequestHeader HttpHeaders headers,
-//                                                 @PathVariable Long companyId,
-//                                                 @RequestBody Company updatedCompany) {
-//        logHeaders(headers);
-//        Company result;
-//        if (securityService.isAuthorized(headers)) {
-//            result = companyService.updateCompany(companyId, updatedCompany);
-//            if (Company.EMPTY.equals(result)) {
-//                return ResponseEntity.badRequest().body(updatedCompany);
-//            }
-//            return ResponseEntity.ok(result);
-//        }
-//        throw new UnauthorizedException("Request is unauthorized");
-//    }
-//
-//    @DeleteMapping(path = "/{companyId}")
-//    public ResponseEntity<String> updateCompany(@RequestHeader HttpHeaders headers, @PathVariable Long companyId) {
-//        logHeaders(headers);
-//        if (securityService.isAuthorized(headers)) {
-//            boolean deleted = companyService.deleteCompany(companyId);
-//            if (!deleted) {
-//                return ResponseEntity.badRequest().body(String.format("Company with id %s does not exists.", companyId));
-//            }
-//            return ResponseEntity.ok(String.format("Company with id %s deleted.", companyId));
-//        }
-//        throw new UnauthorizedException("Unauthorized access to resources.");
-//    }
-//
     @PostMapping("")
-    public ResponseEntity<UploadFileResponse> uploadLogo(@RequestHeader HttpHeaders headers,
-                                                         @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<Collection<UploadFileResponse>> uploadLogo(@RequestHeader HttpHeaders headers,
+                                                                    @RequestParam("files") MultipartFile[] files) {
         logHeaders(headers);
-        CarImage image = carImageService.storeImage(file);
-        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/V1/image/")
-                .path(image.getId())
-                .toUriString();
-        return ResponseEntity.ok(new UploadFileResponse(image.getId(),
-                image.getFileName(), fileDownloadUri, file.getContentType(), file.getSize()
-        ));
+        List<UploadFileResponse> result = new ArrayList<UploadFileResponse>();
+        for (MultipartFile file : files){
+            CarImage image = carImageService.storeImage(file);
+            String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/V1/images/")
+                    .path(image.getId())
+                    .toUriString();
+            result.add(new UploadFileResponse(image.getId(),
+                    image.getFileName(), fileDownloadUri, file.getContentType(), file.getSize()
+            ));
+        }
+        return ResponseEntity.ok(result);
     }
 //
 //    @GetMapping(value = "/{companyId}/logo", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
