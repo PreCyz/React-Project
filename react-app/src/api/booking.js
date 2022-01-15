@@ -2,9 +2,21 @@ import axios from 'axios'
 import { getToken } from '../utils/jwt'
 import { API_NAME, API_ENDPOINTS } from './constants'
 
-export const getBookings = async () => {
+export const getBookings = async (pageNum,maxNum) => {
   try {
-    return axios.get(`${API_NAME}/${API_ENDPOINTS.booking}`, {
+    return axios.get(`${API_NAME}/${API_ENDPOINTS.booking}?pageNum=${pageNum}&maxNum=${maxNum}`, {
+      headers: {
+        Authorization: 'Bearer ' + getToken(),
+      },
+    })
+  } catch (err) {
+    throw err
+  }
+}
+
+export const getBookingsFilter = async (pageNum,maxNum,filter) => {
+  try {
+    return axios.get(`${API_NAME}/${API_ENDPOINTS.booking}?pageNum=${pageNum}&maxNum=${maxNum}&keyword=${filter}`, {
       headers: {
         Authorization: 'Bearer ' + getToken(),
       },

@@ -36,3 +36,18 @@
     transform: rotate(360deg);
   }
 }
+
+.logout {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  text-transform: uppercase;
+  color: black;
+  font-size: 20px;
+  cursor: pointer;
+  border-bottom: 1px solid transparent;
+  transition: 0.5s;
+}
+.logout:hover {
+  border-bottom-color: black;
+}

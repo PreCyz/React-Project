@@ -1,26 +1,109 @@
 import React, { useState, useEffect } from 'react'
 import { AssetListItem } from '.'
-import { getCars } from '../api/car'
+import { getCars, getCarsFilter } from '../api/car'
+import { toast } from 'react-toastify'
 export default function Assets({ active, setManageViewOpen, setManageData }) {
   // TODO
   // Fetch assets from API
 
   const [assets, setAssets] = useState([])
+  const [sortingMode, setSortingMode] = useState('name')
+  const [searchFilter, setSearchFilter] = useState('')
+  const [pageNum, setPageNum] = useState(1)
 
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const response = await getCars(0, 10)
+        const response = await getCars(pageNum - 1, 10)
         console.log(response)
         setAssets(response.data)
       } catch (err) {
-        console.log(err)
+        toast.error('Fetching cars failed', {
+          position: 'top-left',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        })
       }
     }
     fetchCars()
   }, [])
+  let sortedAssets = assets
+  const sortByName = () => {
+    if (sortingMode === 'name') {
+      setSortingMode('nameReverse')
+    } else {
+      setSortingMode('name')
+    }
+  }
 
-  const assetsToRender = assets.map((asset, index) => (
+  const handleSearch = async () => {
+    if (searchFilter === '') {
+      const response = await getCars(pageNum - 1, 10)
+      setAssets(response.data)
+    } else {
+      const response = await getCarsFilter(
+        pageNum - 1,
+        10,
+        searchFilter.toLowerCase()
+      )
+      setAssets(response.data)
+    }
+  }
+
+  useEffect(() => {
+    handleSearch()
+  }, [pageNum])
+  const sortByModel = () => {
+    if (sortingMode === 'model') {
+      setSortingMode('modelReverse')
+    } else {
+      setSortingMode('model')
+    }
+  }
+  const compareNames = (a, b) => {
+    let nameA = a.carName.toUpperCase() // ignore upper and lowercase
+    let nameB = b.carName.toUpperCase() // ignore upper and lowercase
+    if (nameA < nameB) {
+      return -1
+    }
+    if (nameA > nameB) {
+      return 1
+    }
+
+    return 0
+  }
+  const compareModels = (a, b) => {
+    let nameA = a.carModel.toUpperCase() // ignore upper and lowercase
+    let nameB = b.carModel.toUpperCase() // ignore upper and lowercase
+    if (nameA < nameB) {
+      return -1
+    }
+    if (nameA > nameB) {
+      return 1
+    }
+
+    return 0
+  }
+  useEffect(() => {
+    switch (sortingMode) {
+      case 'name':
+        sortedAssets = assets.sort(compareNames)
+        break
+      case 'nameReverse':
+        sortedAssets = assets.sort(compareNames).reverse()
+        break
+      case 'model':
+        sortedAssets = assets.sort(compareModels)
+        break
+      case 'modelReverse':
+        sortedAssets = assets.sort(compareModels).reverse()
+    }
+  }, [sortingMode])
+  const assetsToRender = sortedAssets.map((asset, index) => (
     <AssetListItem
       key={index}
       carId={asset.carId}
@@ -53,7 +136,15 @@ export default function Assets({ active, setManageViewOpen, setManageData }) {
                 className="form-control"
                 type="text"
                 placeholder="Search"
+                onChange={(e) => setSearchFilter(e.target.value)}
+                value={searchFilter}
               />
+              <button
+                onClick={() => handleSearch()}
+                className="btn btn-primary"
+              >
+                Search
+              </button>
             </div>
           </div>
 
@@ -72,10 +163,20 @@ export default function Assets({ active, setManageViewOpen, setManageData }) {
             <thead>
               <tr>
                 <th>
-                  <button className="btn btn-light">Name &#8595;</button>
+                  <button
+                    onClick={() => sortByName()}
+                    className="btn btn-light"
+                  >
+                    Name &#8693;
+                  </button>
                 </th>
                 <th>
-                  <button className="btn btn-light">Model &#8693;</button>
+                  <button
+                    onClick={() => sortByModel()}
+                    className="btn btn-light"
+                  >
+                    Model &#8693;
+                  </button>
                 </th>
                 <th>Location</th>
                 <th>Action</th>
@@ -88,29 +189,41 @@ export default function Assets({ active, setManageViewOpen, setManageData }) {
         <nav>
           <ul className="pagination justify-content-end">
             <li className="page-item">
-              <a className="page-link" href="javascript:">
+              <button
+                className="page-link"
+                onClick={() =>
+                  setPageNum((prev) => (prev > 1 ? prev - 1 : prev))
+                }
+              >
                 <span>&laquo;</span>
-              </a>
+              </button>
             </li>
-            <li className="page-item">
-              <a className="page-link" href="javascript:">
-                1
-              </a>
-            </li>
+            {pageNum > 1 ? (
+              <li
+                className="page-item "
+                onClick={() => setPageNum((prev) => prev - 1)}
+              >
+                <span className="page-link">{pageNum - 1}</span>
+              </li>
+            ) : (
+              <></>
+            )}
             <li className="page-item active">
-              <a className="page-link" href="javascript:">
-                2
-              </a>
+              <span className="page-link">{pageNum}</span>
+            </li>
+            <li
+              className="page-item "
+              onClick={() => setPageNum((prev) => prev + 1)}
+            >
+              <span className="page-link">{pageNum + 1}</span>
             </li>
             <li className="page-item">
-              <a className="page-link" href="javascript:">
-                3
-              </a>
-            </li>
-            <li className="page-item">
-              <a className="page-link" href="javascript:">
+              <button
+                className="page-link"
+                onClick={() => setPageNum((prev) => prev + 1)}
+              >
                 <span>&raquo;</span>
-              </a>
+              </button>
             </li>
           </ul>
         </nav>

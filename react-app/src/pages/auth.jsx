@@ -5,6 +5,7 @@ import { getBookings } from '../api/booking'
 import { setToken, getToken } from '../utils/jwt'
 import { useNavigate } from 'react-router'
 import { toast, ToastContainer } from 'react-toastify'
+import { wait } from '@testing-library/user-event/dist/utils'
 
 export default function Auth() {
   const [mode, setMode] = React.useState('login')
@@ -21,7 +22,19 @@ export default function Auth() {
       await register(loginInput, passwordInput)
       setLoginInput('')
       setPasswordInput('')
-      alert('Registration successful, you can now log in to application')
+      //alert('Registration successful, you can now log in to application')
+      toast.success(
+        'Registration successful, you can now log in to application',
+        {
+          position: 'top-left',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }
+      )
     } catch (error) {
       console.log(error)
       toast.error('Registration failed', {

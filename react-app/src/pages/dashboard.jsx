@@ -3,17 +3,37 @@ import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
 import { Bookings, Assets, Manage } from '../components/'
 import { useState } from 'react'
 import { Navigate } from 'react-router-dom'
-import { getToken } from '../utils/jwt'
+import { getToken, logOut } from '../utils/jwt'
+import { getBookings } from '../api/booking'
 function Dashboard() {
   const [currentTab, setCurrentTab] = useState('assets')
   const [manageViewOpen, setManageViewOpen] = useState(false)
   const [manageData, setManageData] = useState({})
+  const handleLogout = () => {
+    logOut()
+    window.location.reload()
+  }
+  useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        await getBookings()
+      } catch (err) {
+        if (err.message.includes('aut')) {
+          handleLogout()
+        }
+      }
+    }
+    fetchBookings()
+  }, [])
   return getToken() ? (
     <>
       {manageViewOpen ? (
         <Manage setManageViewOpen={setManageViewOpen} manageData={manageData} />
       ) : (
         <div className="container my-3 my-md-4">
+          <span className="logout" onClick={() => handleLogout()}>
+            Logout
+          </span>
           <ul className="nav nav-tabs">
             <li className="nav-item">
               <button

@@ -14,6 +14,19 @@ export const getCars = async (pageNum, maxNum) => {
     throw err
   }
 }
+
+export const getCarsFilter = async (pageNum, maxNum,filter) => {
+  try {
+    return axios.get(
+        `${API_NAME}/${API_ENDPOINTS.car}?pageNum=${pageNum}&maxNum=${maxNum}&keyword=${filter}`,
+        {
+          headers: { Authorization: 'Bearer ' + getToken() },
+        }
+    )
+  } catch (err) {
+    throw err
+  }
+}
 export const getCarById = async (id) => {
   try {
     return axios.get(`${API_NAME}/${API_ENDPOINTS.car}/${id}`)
