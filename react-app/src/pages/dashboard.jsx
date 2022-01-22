@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import { getToken, logOut } from '../utils/jwt'
 import { getBookings } from '../api/booking'
+import { toast, ToastContainer } from 'react-toastify'
 function Dashboard() {
   const [currentTab, setCurrentTab] = useState('assets')
   const [manageViewOpen, setManageViewOpen] = useState(false)
@@ -18,7 +19,7 @@ function Dashboard() {
       try {
         await getBookings()
       } catch (err) {
-        if (err.message.includes('aut')) {
+        if (err.response.status == 401) {
           handleLogout()
         }
       }
@@ -27,6 +28,8 @@ function Dashboard() {
   }, [])
   return getToken() ? (
     <>
+
+      <ToastContainer />
       {manageViewOpen ? (
         <Manage setManageViewOpen={setManageViewOpen} manageData={manageData} />
       ) : (
@@ -37,9 +40,8 @@ function Dashboard() {
           <ul className="nav nav-tabs">
             <li className="nav-item">
               <button
-                className={`nav-link ${
-                  currentTab === 'assets?' ? 'active' : ''
-                }`}
+                className={`nav-link ${currentTab === 'assets?' ? 'active' : ''
+                  }`}
                 data-bs-toggle="tab"
                 data-bs-target="#assets-page"
                 onClick={() => setCurrentTab('assets')}
@@ -49,9 +51,8 @@ function Dashboard() {
             </li>
             <li className="nav-item">
               <button
-                className={`nav-link ${
-                  currentTab === 'bookings?' ? 'active' : ''
-                }`}
+                className={`nav-link ${currentTab === 'bookings?' ? 'active' : ''
+                  }`}
                 data-bs-toggle="tab"
                 data-bs-target="#bookings-page"
                 onClick={() => setCurrentTab('bookings')}

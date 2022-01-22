@@ -15,13 +15,13 @@ export const getCars = async (pageNum, maxNum) => {
   }
 }
 
-export const getCarsFilter = async (pageNum, maxNum,filter) => {
+export const getCarsFilter = async (pageNum, maxNum, filter) => {
   try {
     return axios.get(
-        `${API_NAME}/${API_ENDPOINTS.car}?pageNum=${pageNum}&maxNum=${maxNum}&keyword=${filter}`,
-        {
-          headers: { Authorization: 'Bearer ' + getToken() },
-        }
+      `${API_NAME}/${API_ENDPOINTS.car}?pageNum=${pageNum}&maxNum=${maxNum}&keyword=${filter}`,
+      {
+        headers: { Authorization: 'Bearer ' + getToken() },
+      }
     )
   } catch (err) {
     throw err
@@ -60,7 +60,12 @@ export const updateCar = async (data) => {
     location: data.location,
   }
   try {
-    return axios.put(`${API_NAME}/${API_ENDPOINTS.car}`, JSON.stringify(body))
+    return axios.put(`${API_NAME}/${API_ENDPOINTS.car}`, JSON.stringify(body), {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + getToken(),
+      },
+    })
   } catch (err) {
     throw err
   }

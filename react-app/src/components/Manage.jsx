@@ -18,11 +18,11 @@ export default function Manage({
   const [imagesIdArray, setImagesIdArray] = useState(manageData.images | [])
   const [startDateInput, setStartDateInput] = useState(
     moment(manageData.startDate).format('DD-MM-YYYY') |
-      moment(new Date()).format('DD-MM-YYYY')
+    moment(new Date()).format('DD-MM-YYYY')
   )
   const [endDateInput, setEndDateInput] = useState(
     moment(manageData.endDate).format('DD-YY-MMMM') |
-      moment(new Date()).format('DD-MM-YYYY')
+    moment(new Date()).format('DD-MM-YYYY')
   )
   const [activeInput, setActiveInput] = useState(manageData.active | false)
   const [descInput, setDescInput] = useState(manageData.description | '')
@@ -46,8 +46,8 @@ export default function Manage({
   }
   useEffect(() => {
     setFilteredOrders(manageData.orders)
-    manageData?.description && setDescInput(manageData.description)
-    if (manageData?.carName) {
+    if (manageData?.description) { setDescInput(manageData.description) }
+    if (manageData?.name) {
       setEditMode(true)
       manageData.images.forEach(async (image, index) => {
         'use strict'
@@ -57,20 +57,21 @@ export default function Manage({
             return res.blob()
           })
           .then((blob) =>
-            setImagesArray([
-              ...imagesArray,
-              new File([blob], `image-${index}.png`, { type: 'image/png' }),
+            setImagesArray(prev => [...prev,
+            new File([blob], `image-${index}.png`, { type: 'image/png' }),
             ])
           )
-        console.log(imagesArray)
       })
     } else {
       setEditMode(false)
     }
+    if (manageData.active === 1 || manageData.active === true) {
+      setActiveInput(true)
+    }
+    else {
+      setActiveInput(false)
+    }
   }, [])
-  useEffect(() => {
-    console.log(descInput)
-  }, [descInput])
   const handleUpload = async () => {
     try {
       const response = await addImage(imagesArray)
@@ -99,15 +100,29 @@ export default function Manage({
   useEffect(() => {
     console.log(imagesIdArray)
   }, [imagesIdArray])
+  useEffect(() => {
+    console.log(manageData)
+  }, [])
 
-  const handleDelete = () => {
-    // TODO Delete Api Call
-  }
   const submitForm = async (e) => {
+    console.log('editMode')
+    console.log(editMode)
     e.preventDefault()
     let data
+
     if (editMode) {
-      //TODO Add image posting
+      if (!activeInput && manageData.orders.length !== 0) {
+        toast.error('Delete all bookings first', {
+          position: 'top-left',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        })
+        return 0
+      }
       data = {
         carName: nameInput,
         carModel: modelInput,
@@ -340,7 +355,7 @@ export default function Manage({
                 <input
                   style={{ marginRight: '15px' }}
                   type="checkbox"
-                  value={activeInput}
+                  checked={activeInput}
                   onChange={(e) => {
                     setActiveInput(e.target.checked)
                   }}
@@ -349,12 +364,6 @@ export default function Manage({
               </div>
 
               <div className="d-flex justify-content-between">
-                <button
-                  className="btn btn-outline-danger"
-                  onClick={() => handleDelete()}
-                >
-                  Delete
-                </button>
                 <button
                   className="btn btn-primary"
                   onClick={(e) => submitForm(e)}
