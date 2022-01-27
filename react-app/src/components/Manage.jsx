@@ -18,11 +18,11 @@ export default function Manage({
   const [imagesIdArray, setImagesIdArray] = useState(manageData.images | [])
   const [startDateInput, setStartDateInput] = useState(
     moment(manageData.startDate).format('DD-MM-YYYY') |
-    moment(new Date()).format('DD-MM-YYYY')
+      moment(new Date()).format('DD-MM-YYYY')
   )
   const [endDateInput, setEndDateInput] = useState(
     moment(manageData.endDate).format('DD-YY-MMMM') |
-    moment(new Date()).format('DD-MM-YYYY')
+      moment(new Date()).format('DD-MM-YYYY')
   )
   const [activeInput, setActiveInput] = useState(manageData.active | false)
   const [descInput, setDescInput] = useState(manageData.description | '')
@@ -46,7 +46,9 @@ export default function Manage({
   }
   useEffect(() => {
     setFilteredOrders(manageData.orders)
-    if (manageData?.description) { setDescInput(manageData.description) }
+    if (manageData?.description) {
+      setDescInput(manageData.description)
+    }
     if (manageData?.name) {
       setEditMode(true)
       manageData.images.forEach(async (image, index) => {
@@ -57,8 +59,9 @@ export default function Manage({
             return res.blob()
           })
           .then((blob) =>
-            setImagesArray(prev => [...prev,
-            new File([blob], `image-${index}.png`, { type: 'image/png' }),
+            setImagesArray((prev) => [
+              ...prev,
+              new File([blob], `image-${index}.png`, { type: 'image/png' }),
             ])
           )
       })
@@ -67,8 +70,7 @@ export default function Manage({
     }
     if (manageData.active === 1 || manageData.active === true) {
       setActiveInput(true)
-    }
-    else {
+    } else {
       setActiveInput(false)
     }
   }, [])
@@ -374,60 +376,63 @@ export default function Manage({
             </form>
           </div>
         </div>
-
-        <div className="row">
-          <div className="col-md-6 col-lg-4 mb-2">
-            <div className="input-group">
-              <span className="input-group-text">🔍</span>
-              <input
-                onChange={(e) => handleSearch(e)}
-                className="form-control"
-                type="text"
-                placeholder="Search"
-              />
+        {manageData.orders != 0 ? (
+          <div className="row">
+            <div className="col-md-6 col-lg-4 mb-2">
+              <div className="input-group">
+                <span className="input-group-text">🔍</span>
+                <input
+                  onChange={(e) => handleSearch(e)}
+                  className="form-control"
+                  type="text"
+                  placeholder="Search"
+                />
+              </div>
             </div>
           </div>
-        </div>
+        ) : null}
 
-        <div className="table-responsive">
-          <table className="table table-striped">
-            <thead>
-              <tr>
-                <th>
-                  <button className="btn">ID &#8595;</button>
-                </th>
-                <th>
-                  <button className="btn">First name &#8693;</button>
-                </th>
-                <th>
-                  <button className="btn">Last name &#8693;</button>
-                </th>
-                <th>
-                  <button className="btn">Booking date &#8693;</button>
-                </th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredOrders?.map((item) => (
+        {manageData.orders != 0 ? (
+          <div className="table-responsive">
+            <table className="table table-striped">
+              <thead>
                 <tr>
-                  <td>{item.orderId}</td>
-                  <td>{item.firstName}</td>
-                  <td>{item.lastName}</td>
-                  <td>{moment(item.startDate).format('DD-MM-YYYY')}</td>
-                  <td>
-                    <button
-                      className="btn btn-primary"
-                      onClick={() => handleCancel(item)}
-                    >
-                      Cancel
-                    </button>
-                  </td>
+                  <th>
+                    <button className="btn">ID &#8595;</button>
+                  </th>
+                  <th>
+                    <button className="btn">First name &#8693;</button>
+                  </th>
+                  <th>
+                    <button className="btn">Last name &#8693;</button>
+                  </th>
+                  <th>
+                    <button className="btn">Booking date &#8693;</button>
+                  </th>
+                  <th>Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {filteredOrders?.map((item) => (
+                  <tr>
+                    <td>{item.orderId}</td>
+                    <td>{item.firstName}</td>
+                    <td>{item.lastName}</td>
+                    <td>{moment(item.startDate).format('DD-MM-YYYY')}</td>
+                    <td>
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => handleCancel(item)}
+                      >
+                        Cancel
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : null}
 
         {/* <nav>
           <ul className="pagination justify-content-end">
