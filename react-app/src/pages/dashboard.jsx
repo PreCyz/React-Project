@@ -28,49 +28,52 @@ function Dashboard() {
   }, [])
   return getToken() ? (
     <>
-
       <ToastContainer />
       {manageViewOpen ? (
         <Manage setManageViewOpen={setManageViewOpen} manageData={manageData} />
       ) : (
-        <div className="container my-3 my-md-4">
-          <span className="logout" onClick={() => handleLogout()}>
-            Logout
-          </span>
-          <ul className="nav nav-tabs">
-            <li className="nav-item">
-              <button
-                className={`nav-link ${currentTab === 'assets?' ? 'active' : ''
+        <div className="wrapper">
+          <div className="container my-3 my-md-4">
+            <span className="logout" onClick={() => handleLogout()}>
+              Logout
+            </span>
+            <ul className="nav nav-tabs">
+              <li className="nav-item">
+                <button
+                  className={`nav-link ${
+                    currentTab === 'assets?' ? 'active' : ''
                   }`}
-                data-bs-toggle="tab"
-                data-bs-target="#assets-page"
-                onClick={() => setCurrentTab('assets')}
-              >
-                Assets
-              </button>
-            </li>
-            <li className="nav-item">
-              <button
-                className={`nav-link ${currentTab === 'bookings?' ? 'active' : ''
+                  data-bs-toggle="tab"
+                  data-bs-target="#assets-page"
+                  onClick={() => setCurrentTab('assets')}
+                >
+                  Assets
+                </button>
+              </li>
+              <li className="nav-item">
+                <button
+                  className={`nav-link ${
+                    currentTab === 'bookings?' ? 'active' : ''
                   }`}
-                data-bs-toggle="tab"
-                data-bs-target="#bookings-page"
-                onClick={() => setCurrentTab('bookings')}
-              >
-                Bookings
-              </button>
-            </li>
-          </ul>
-          <div className="tab-content" id="myTabContent">
-            {currentTab === 'assets' ? (
-              <Assets
-                active={currentTab === 'assets'}
-                setManageViewOpen={setManageViewOpen}
-                setManageData={setManageData}
-              />
-            ) : (
-              <Bookings active={currentTab === 'bookings'} />
-            )}
+                  data-bs-toggle="tab"
+                  data-bs-target="#bookings-page"
+                  onClick={() => setCurrentTab('bookings')}
+                >
+                  Bookings
+                </button>
+              </li>
+            </ul>
+            <div className="tab-content" id="myTabContent">
+              {currentTab === 'assets' ? (
+                <Assets
+                  active={currentTab === 'assets'}
+                  setManageViewOpen={setManageViewOpen}
+                  setManageData={setManageData}
+                />
+              ) : (
+                <Bookings active={currentTab === 'bookings'} />
+              )}
+            </div>
           </div>
         </div>
       )}

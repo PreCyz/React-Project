@@ -38,8 +38,8 @@
 }
 
 .logout {
-  position: fixed;
-  top: 15px;
+  position: absolute;
+  top: 8px;
   right: 15px;
   text-transform: uppercase;
   color: black;
@@ -50,4 +50,8 @@
 }
 .logout:hover {
   border-bottom-color: black;
+}
+
+.wrapper {
+  position: relative;
 }
