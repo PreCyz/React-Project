@@ -1,7 +1,6 @@
 import React from 'react'
 
 export default function AssetListItem({
-  id,
   name,
   model,
   location,
@@ -19,7 +18,7 @@ export default function AssetListItem({
   const handleManage = () => {
     console.log(description)
     setManageData({
-      id,
+      id:carId,
       name,
       model,
       location,
