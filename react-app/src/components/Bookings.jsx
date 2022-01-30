@@ -269,6 +269,7 @@ export default function Bookings({ active }) {
       bookingDate={moment(booking.startDate).format('DD-MM-YYYY')}
       booklyId={booking.booklyId}
       carId={booking.carId}
+      status={booking.status}
     />
   ))
   return (

@@ -1,6 +1,7 @@
 import React from 'react'
 import { cancelBooking } from '../api/booking'
 import { toast } from 'react-toastify'
+
 export default function BookingListItem({
   id,
   firstName,
@@ -11,6 +12,7 @@ export default function BookingListItem({
   location,
   carId,
   booklyId,
+  status,
 }) {
   const handleBookingManage = async () => {
     let data = {
@@ -43,14 +45,18 @@ export default function BookingListItem({
       <td>{model}</td>
       <td>{location}</td>
       <td>
-        <button
-          className="btn btn-primary"
-          onClick={() => {
-            handleBookingManage()
-          }}
-        >
-          Cancel
-        </button>
+        {status == 1 ? (
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              handleBookingManage()
+            }}
+          >
+            Cancel
+          </button>
+        ) : (
+          <p className="p">Cancelled</p>
+        )}
       </td>
     </tr>
   )

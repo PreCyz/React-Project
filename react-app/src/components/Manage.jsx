@@ -18,9 +18,9 @@ export default function Manage({
   const [imagesIdArray, setImagesIdArray] = useState(manageData.images | [])
   const [startDateInput, setStartDateInput] = useState(new Date())
   const [endDateInput, setEndDateInput] = useState(new Date())
-  const [activeInput, setActiveInput] = useState(manageData.active )
+  const [activeInput, setActiveInput] = useState(manageData.active)
   const [descInput, setDescInput] = useState(manageData.description)
-  const [priceInput, setPriceInput] = useState(manageData.price )
+  const [priceInput, setPriceInput] = useState(manageData.price)
   const [filteredOrders, setFilteredOrders] = useState([])
 
   const handleSearch = (e) => {
@@ -93,10 +93,9 @@ export default function Manage({
       orderId: order.orderId,
       booklyId: order.booklyId,
     }
-    try{
-    await cancelBooking(data)
-    }
-    catch(err){
+    try {
+      await cancelBooking(data)
+    } catch (err) {
       console.log(err)
       toast.error('Cancel failed', {
         position: 'top-left',
@@ -137,13 +136,13 @@ export default function Manage({
         return 0
       }
       data = {
-        carId:manageData.id,
+        carId: manageData.id,
         carName: nameInput,
         carModel: modelInput,
         description: descInput,
         price: Number(priceInput),
         location: locationInput,
-        images: imagesIdArray.length===0?[]:manageData.images,
+        images: imagesIdArray.length === 0 ? [] : manageData.images,
         startDateTime: moment(startDateInput),
         endDateTime: moment(endDateInput),
         active: activeInput,
@@ -155,16 +154,16 @@ export default function Manage({
       console.log(data)
       try {
         await updateCar(data)
-        
-          toast.success('Update car successful', {
-            position: 'top-left',
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          })
+
+        toast.success('Update car successful', {
+          position: 'top-left',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        })
       } catch (error) {
         toast.error('Update car failed', {
           position: 'top-left',
@@ -184,7 +183,7 @@ export default function Manage({
         description: descInput,
         price: Number(priceInput),
         location: locationInput,
-        images: imagesIdArray===0?[]:imagesIdArray,
+        images: imagesIdArray === 0 ? [] : imagesIdArray,
         startDateTime: moment(startDateInput),
         endDateTime: moment(endDateInput),
         active: activeInput,
@@ -411,7 +410,7 @@ export default function Manage({
             </form>
           </div>
         </div>
-        {manageData?.orders &&manageData.orders.length !==0 ? (
+        {manageData?.orders && manageData.orders.length !== 0 ? (
           <div className="row">
             <div className="col-md-6 col-lg-4 mb-2">
               <div className="input-group">
@@ -455,12 +454,16 @@ export default function Manage({
                     <td>{item.lastName}</td>
                     <td>{moment(item.startDate).format('DD-MM-YYYY')}</td>
                     <td>
-                      <button
-                        className="btn btn-primary"
-                        onClick={() => handleCancel(item)}
-                      >
-                        Cancel
-                      </button>
+                      {item.status == 1 ? (
+                        <button
+                          className="btn btn-primary"
+                          onClick={() => handleCancel(item)}
+                        >
+                          Cancel
+                        </button>
+                      ) : (
+                        <p className="p">Cancelled</p>
+                      )}
                     </td>
                   </tr>
                 ))}

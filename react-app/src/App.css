@@ -55,3 +55,7 @@
 .wrapper {
   position: relative;
 }
+
+.p {
+  color: red;
+}
