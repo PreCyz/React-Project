@@ -40,7 +40,7 @@ export default function AssetListItem({
       <td>{model}</td>
       <td>{location}</td>
       <td>
-        <button onClick={() => handleManage()} className="btn">
+        <button onClick={() => handleManage()} className="btn btn-primary">
           Manage
         </button>
       </td>

@@ -16,17 +16,11 @@ export default function Manage({
   const [imagesArray, setImagesArray] = useState([])
   const [currentImage, setCurrentImage] = useState()
   const [imagesIdArray, setImagesIdArray] = useState(manageData.images | [])
-  const [startDateInput, setStartDateInput] = useState(
-    moment(manageData.startDate).format('DD-MM-YYYY') |
-      moment(new Date()).format('DD-MM-YYYY')
-  )
-  const [endDateInput, setEndDateInput] = useState(
-    moment(manageData.endDate).format('DD-YY-MMMM') |
-      moment(new Date()).format('DD-MM-YYYY')
-  )
-  const [activeInput, setActiveInput] = useState(manageData.active | false)
-  const [descInput, setDescInput] = useState(manageData.description | '')
-  const [priceInput, setPriceInput] = useState(manageData.price | '')
+  const [startDateInput, setStartDateInput] = useState(new Date())
+  const [endDateInput, setEndDateInput] = useState(new Date())
+  const [activeInput, setActiveInput] = useState(manageData.active )
+  const [descInput, setDescInput] = useState(manageData.description)
+  const [priceInput, setPriceInput] = useState(manageData.price )
   const [filteredOrders, setFilteredOrders] = useState([])
 
   const handleSearch = (e) => {
@@ -51,6 +45,8 @@ export default function Manage({
     }
     if (manageData?.name) {
       setEditMode(true)
+      setStartDateInput(manageData.startDateTime)
+      setEndDateInput(manageData.endDateTime)
       manageData.images.forEach(async (image, index) => {
         'use strict'
         const response = await getImage(image)
@@ -97,7 +93,21 @@ export default function Manage({
       orderId: order.orderId,
       booklyId: order.booklyId,
     }
-    cancelBooking(data)
+    try{
+    await cancelBooking(data)
+    }
+    catch(err){
+      console.log(err)
+      toast.error('Cancel failed', {
+        position: 'top-left',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      })
+    }
   }
   useEffect(() => {
     console.log(imagesIdArray)
@@ -126,12 +136,13 @@ export default function Manage({
         return 0
       }
       data = {
+        id:manageData.id,
         carName: nameInput,
         carModel: modelInput,
         description: descInput,
         price: Number(priceInput),
         location: locationInput,
-        images: imagesIdArray,
+        images: imagesIdArray===0?[]:imagesIdArray,
         startDateTime: moment(startDateInput),
         endDateTime: moment(endDateInput),
         active: activeInput,
@@ -141,6 +152,16 @@ export default function Manage({
       }
       try {
         await updateCar(data)
+        
+          toast.success('Update car successful', {
+            position: 'top-left',
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          })
       } catch (error) {
         toast.error('Update car failed', {
           position: 'top-left',
@@ -160,7 +181,7 @@ export default function Manage({
         description: descInput,
         price: Number(priceInput),
         location: locationInput,
-        images: imagesIdArray,
+        images: imagesIdArray===0?[]:imagesIdArray,
         startDateTime: moment(startDateInput),
         endDateTime: moment(endDateInput),
         active: activeInput,
@@ -171,6 +192,17 @@ export default function Manage({
       console.log(data)
       try {
         await addCar(data)
+        {
+          toast.success('Add car successful', {
+            position: 'top-left',
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          })
+        }
       } catch (error) {
         toast.error('Add car failed', {
           position: 'top-left',
@@ -326,8 +358,8 @@ export default function Manage({
                   id="input-location"
                   className="form-control"
                   type="date"
-                  placeholder="&nbsp;"
-                  value={startDateInput}
+                  // placeholder="&nbsp;"
+                  value={moment(startDateInput).format('YYYY-MM-DD')}
                   onChange={(e) => {
                     setStartDateInput(e.target.value)
                   }}
@@ -340,7 +372,7 @@ export default function Manage({
                   className="form-control"
                   type="date"
                   placeholder="&nbsp;"
-                  value={endDateInput}
+                  value={moment(endDateInput).format('YYYY-MM-DD')}
                   onChange={(e) => {
                     setEndDateInput(e.target.value)
                   }}
@@ -376,7 +408,7 @@ export default function Manage({
             </form>
           </div>
         </div>
-        {manageData.orders != 0 ? (
+        {manageData?.orders &&manageData.orders.length !==0 ? (
           <div className="row">
             <div className="col-md-6 col-lg-4 mb-2">
               <div className="input-group">
@@ -392,7 +424,7 @@ export default function Manage({
           </div>
         ) : null}
 
-        {manageData.orders != 0 ? (
+        {manageData?.orders && manageData.orders.length !== 0 ? (
           <div className="table-responsive">
             <table className="table table-striped">
               <thead>

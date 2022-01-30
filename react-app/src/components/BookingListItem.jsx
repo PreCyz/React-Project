@@ -44,7 +44,7 @@ export default function BookingListItem({
       <td>{location}</td>
       <td>
         <button
-          className="btn"
+          className="btn btn-primary"
           onClick={() => {
             handleBookingManage()
           }}

@@ -51,16 +51,8 @@ export const addCar = async (data) => {
   }
 }
 export const updateCar = async (data) => {
-  const body = {
-    carId: data.id,
-    carName: data.name,
-    carModel: data.model,
-    description: data.description,
-    price: data.price,
-    location: data.location,
-  }
   try {
-    return axios.put(`${API_NAME}/${API_ENDPOINTS.car}`, JSON.stringify(body), {
+    return axios.put(`${API_NAME}/${API_ENDPOINTS.car}`, JSON.stringify(data), {
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + getToken(),
