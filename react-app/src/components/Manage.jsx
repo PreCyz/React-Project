@@ -23,6 +23,21 @@ export default function Manage({
   const [priceInput, setPriceInput] = useState(manageData.price)
   const [filteredOrders, setFilteredOrders] = useState([])
 
+  const handleDelete = (image) => {
+    imagesArray.forEach((i, index) => {
+      if (image.name === i.name) {
+        setImagesIdArray(
+          imagesIdArray.filter((id, idIndex) => idIndex !== index)
+        )
+      }
+    })
+    setImagesArray(imagesArray.filter((i) => image.name !== i.name))
+  }
+
+  useEffect(() => {
+    console.log(imagesIdArray)
+  }, [imagesIdArray])
+
   const handleSearch = (e) => {
     if (e.target.value === '') {
       setFilteredOrders(manageData.orders)
@@ -47,6 +62,7 @@ export default function Manage({
       setEditMode(true)
       setStartDateInput(manageData.startDateTime)
       setEndDateInput(manageData.endDateTime)
+      setImagesIdArray(manageData.images)
       manageData.images.forEach(async (image, index) => {
         'use strict'
         const response = await getImage(image)
@@ -74,6 +90,15 @@ export default function Manage({
     try {
       const response = await addImage(imagesArray)
       setImagesIdArray(response.data.map((item) => item.fileId))
+      toast.success('Successfully uploaded image', {
+        position: 'top-left',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      })
     } catch (err) {
       toast.error('Add image failed', {
         position: 'top-left',
@@ -151,7 +176,7 @@ export default function Manage({
         description: descInput,
         price: Number(priceInput),
         location: locationInput,
-        images: imagesIdArray.length === 0 ? [] : manageData.images,
+        images: imagesIdArray.length === 0 ? [] : imagesIdArray,
         startDateTime: moment(startDateInput),
         endDateTime: moment(endDateInput),
         active: activeInput,
@@ -271,11 +296,7 @@ export default function Manage({
                       <div className="col-auto">
                         <button
                           className="btn"
-                          onClick={() =>
-                            setImagesArray(
-                              imagesArray.filter((i) => image.name !== i.name)
-                            )
-                          }
+                          onClick={() => handleDelete(image)}
                         >
                           x
                         </button>
