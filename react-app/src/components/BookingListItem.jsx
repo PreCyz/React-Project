@@ -23,6 +23,15 @@ export default function BookingListItem({
     }
     try {
       await cancelBooking(data)
+      toast.success('Booking cancelled successfully', {
+        position: 'top-left',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      })
     } catch (err) {
       toast.error('Cancel booking failed', {
         position: 'top-left',

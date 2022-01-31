@@ -95,6 +95,15 @@ export default function Manage({
     }
     try {
       await cancelBooking(data)
+      toast.success('Booking cancelled successfully', {
+        position: 'top-left',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      })
     } catch (err) {
       console.log(err)
       toast.error('Cancel failed', {

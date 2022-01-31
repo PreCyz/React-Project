@@ -26,8 +26,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "upload:azure":"az storage blob upload-batch -s ./build -d '$web' --account-name webapppw2022",
-    "build:deploy":"npm run build && npm run upload:azure"
+    "upload:azure": "az storage blob upload-batch -s ./build -d '$web' --account-name webapppw2022",
+    "build:deploy": "npm run build && npm run upload:azure"
   },
   "eslintConfig": {
     "extends": [
