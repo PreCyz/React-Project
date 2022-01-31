@@ -8,7 +8,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import react.pw.carly.dao.CarImageRepository;
-import react.pw.carly.exceptions.InvalidFileException;
+import react.pw.carly.security.exceptions.InvalidFileException;
 import react.pw.carly.models.CarImage;
 
 import java.io.IOException;

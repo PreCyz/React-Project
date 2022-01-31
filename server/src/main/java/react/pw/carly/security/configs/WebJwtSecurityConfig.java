@@ -93,6 +93,7 @@ public class WebJwtSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers(HttpMethod.POST,"/V1/authenticate").permitAll()
                 .antMatchers(HttpMethod.POST, "/V1/users").permitAll()
                 .antMatchers(HttpMethod.GET, "/V1/actuator/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/V1/images/**").permitAll()
                 // all other requests need to be authenticated
                 .anyRequest().authenticated();
 

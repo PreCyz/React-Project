@@ -1,4 +1,4 @@
-package react.pw.carly.exceptions;
+package react.pw.carly.security.exceptions;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

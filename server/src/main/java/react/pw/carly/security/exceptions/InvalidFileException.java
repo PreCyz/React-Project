@@ -1,4 +1,4 @@
-package react.pw.carly.exceptions;
+package react.pw.carly.security.exceptions;
 
 /** Created by Pawel Gawedzki on 06-Oct-2019. */
 public class InvalidFileException extends RuntimeException {

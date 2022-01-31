@@ -1,4 +1,4 @@
-package react.pw.carly.exceptions;
+package react.pw.carly.security.exceptions;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
