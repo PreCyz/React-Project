@@ -28,14 +28,14 @@ public interface CarRepository extends JpaRepository<Car, Long> {
             "(:description is null or c.description like %:description%) and " +
             "(:model is null or c.carModel like %:model%) and" +
             " c.isActive = :isActive and  " +
-            "(:startDate is null or :startDate > c.startDateTime) and" +
-            "(:endDate is null or :endDate < c.endDateTime) "
-//            "and ( (:startDate is null and :endDate is null) or c.carId not in" +
-//            " (select o.car.carId from CarOrder o " +
-//            "   where (:startDate is null or (o.startDate <= :startDate and o.endDate >= :startDate))" +
-//            "   and (:endDate is null or (o.startDate <= :endDate and o.endDate >= :endDate)))" +
-//            ") "
+            "(:carStartDate is null or :carStartDate > c.startDateTime) and" +
+            "(:carEndDate is null or :carEndDate < c.endDateTime) and"+
+            "(:startDate is null  or " +
+            "   c.carId not in (select o.car.carId from CarOrder o Where o.status = '1' and ((o.startDate > :startDate and  o.startDate <= :endDate) or (o.endDate > :startDate and  o.endDate <= :endDate))" +
+            //"   where (o.startDate => :startDate and o.startDate <= :endDate)" +
+            //"   or (o.endDate => :startDate and o.endDate <= :endDate)" +
+            "   ))"
     )
-    List<Car>   findAllByInputString(String carName, String location, String description, String model, LocalDateTime startDate , LocalDateTime endDate,Boolean isActive, Pageable pageable);
+    List<Car>   findAllByInputString(String carName, String location, String description, String model, LocalDateTime carStartDate , LocalDateTime carEndDate,LocalDateTime startDate , LocalDateTime endDate,Boolean isActive, Pageable pageable);
 
 }

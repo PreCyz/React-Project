@@ -64,4 +64,8 @@ public class CarOrder implements Serializable {
     @ManyToOne (fetch = FetchType.LAZY)
     private Car car;
 
+    public  Long getCarId (){
+        return car.getCarId();
+    }
+
 }

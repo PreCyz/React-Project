@@ -3,31 +3,23 @@ package react.pw.carly.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import react.pw.carly.dao.CarOrderRepository;
 import react.pw.carly.dao.CarRepository;
-import react.pw.carly.exceptions.ExceptionDetails;
+import react.pw.carly.security.exceptions.ExceptionDetails;
 import react.pw.carly.models.Car;
-import react.pw.carly.models.CarImage;
 import react.pw.carly.models.CarOrder;
 import react.pw.carly.services.CarImageService;
 import react.pw.carly.services.CarService;
-import react.pw.carly.web.UploadFileResponse;
 
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -98,7 +90,7 @@ public class CarController {
 
 
     @GetMapping(path = "/{carId}")
-    public ResponseEntity<Car> getCompany(@RequestHeader HttpHeaders headers,
+    public ResponseEntity<Car> getCarById(@RequestHeader HttpHeaders headers,
                                               @PathVariable Long carId) {
         logHeaders(headers);
         Optional<Car> car = repository.findById(carId);
@@ -114,9 +106,12 @@ public class CarController {
         logHeaders(headers);
         Optional<Car> car = repository.findById(carId);
         if (!car.isEmpty()){
-            if (car.get().getStartDateTime().isAfter(carOrder.getStartDate()) || car.get().getEndDateTime().isBefore(carOrder.getEndDate())  ){
+                if (car.get().getStartDateTime().isAfter(carOrder.getStartDate()) || car.get().getEndDateTime().isBefore(carOrder.getEndDate())  ){
                 return new ResponseEntity<>(new ExceptionDetails(HttpStatus.CONFLICT,
                         String.format("car [%d] is not active during this timeslot", car.get().getCarId())), HttpStatus.CONFLICT);
+            }
+            if(carOrder.getEndDate() == null){
+                carOrder.setEndDate(car.get().getEndDateTime());
             }
             String[] status = {"0","1"};
             List<CarOrder> orders = orderRepository.findAllByStartDateLessThanEqualAndEndDateGreaterThanEqualAndCarIsAndStatusIn(
@@ -176,7 +171,7 @@ public class CarController {
                                                                             @RequestParam(required=false,defaultValue = "true") Boolean isActive,
                                                                            @RequestParam(required=false) String keyword) {
         logHeaders(headers);
-        Pageable pageable = PageRequest.of(pageNum*maxNum, maxNum);
+        Pageable pageable = PageRequest.of(pageNum, maxNum);
         if (!StringUtils.isEmpty(keyword)){
                 List<Car> result = repository.
                     findAllByKeyWords(
@@ -184,9 +179,15 @@ public class CarController {
             return ResponseEntity.ok(result);
         }else{
             DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
-            LocalDateTime startDateD = StringUtils.isEmpty(startDate)? null: LocalDateTime.parse(startDate, formatter);
-            LocalDateTime endDateD = StringUtils.isEmpty(endDate)? null: LocalDateTime.parse(endDate, formatter);
-            List<Car> result = repository.findAllByInputString(carName, location,description,model,startDateD,endDateD,isActive,pageable);
+            LocalDateTime startDateD = null;
+            LocalDateTime endDateD = null;
+            LocalDateTime carStartDateD = StringUtils.isEmpty(startDate)? null: LocalDateTime.parse(startDate, formatter);
+            LocalDateTime carEndDateD = StringUtils.isEmpty(endDate)? null: LocalDateTime.parse(endDate, formatter);
+            if (StringUtils.hasText(startDate) || StringUtils.hasText(endDate) ){
+                startDateD = StringUtils.isEmpty(startDate)? LocalDateTime.now(): LocalDateTime.parse(startDate, formatter);
+                endDateD = StringUtils.isEmpty(endDate)? LocalDateTime.of(9999,12,31,23,59) : LocalDateTime.parse(endDate, formatter);
+            }
+            List<Car> result = repository.findAllByInputString(carName, location,description,model,carStartDateD,carEndDateD,startDateD,endDateD,isActive,pageable);
             return ResponseEntity.ok(result);
         }
     }

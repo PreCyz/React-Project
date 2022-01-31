@@ -57,7 +57,7 @@ public class OrderController {
                                                            @RequestParam(required=false,defaultValue = "10" ) Integer maxNum,
                                                            @RequestParam(required=false) String keyword) {
         logHeaders(headers);
-        Pageable pageable = PageRequest.of(pageNum*maxNum, maxNum);
+        Pageable pageable = PageRequest.of(pageNum, maxNum);
 
         List<FullOrder> result = orderRepository.findAllByInputString(keyword,pageable);
         return ResponseEntity.ok(result);
